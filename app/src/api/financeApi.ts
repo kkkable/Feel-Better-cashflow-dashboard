@@ -8,6 +8,7 @@ const GUEST_SETTINGS_ID = "guest-settings";
 
 let financeSessionMode: FinanceSessionMode = "user";
 let guestIdCounter = 0;
+let guestFeelBetterSession: { expiresAt: string; token: string } | null = null;
 let guestSettings: FinanceRecord | null = null;
 let guestIncomeRecords: FinanceRecord[] = [];
 let guestExpenseBuckets: FinanceRecord[] = [];
@@ -33,6 +34,11 @@ export type FeelBetterResult = {
   comment: string;
   suggestions: string[];
   source: "huggingface" | "local";
+};
+
+type GuestAiSessionResult = {
+  expires_at: string;
+  guest_session_token: string;
 };
 
 function clone<T>(value: T): T {
@@ -138,6 +144,7 @@ function deleteGuestRecord(records: FinanceRecord[], id: string) {
 export function startGuestFinanceSession() {
   financeSessionMode = "guest";
   guestIdCounter = 0;
+  guestFeelBetterSession = null;
   guestSettings = createDefaultGuestSettings();
   guestIncomeRecords = [];
   guestExpenseBuckets = [];
@@ -148,6 +155,7 @@ export function startGuestFinanceSession() {
 export function clearGuestFinanceSession() {
   financeSessionMode = "user";
   guestIdCounter = 0;
+  guestFeelBetterSession = null;
   guestSettings = null;
   guestIncomeRecords = [];
   guestExpenseBuckets = [];
@@ -249,6 +257,40 @@ function assertFeelBetterResult(value: FeelBetterResult) {
   }
 }
 
+function hasValidGuestFeelBetterSession() {
+  return (
+    guestFeelBetterSession &&
+    guestFeelBetterSession.token &&
+    Date.parse(guestFeelBetterSession.expiresAt) > Date.now() + 60_000
+  );
+}
+
+async function getGuestFeelBetterSessionToken() {
+  if (!isGuestSession()) return "";
+  if (hasValidGuestFeelBetterSession()) return guestFeelBetterSession?.token || "";
+
+  let session: GuestAiSessionResult;
+
+  try {
+    const result = await base44.functions.invoke("feelBetterReview", {
+      issue_guest_session: true,
+    });
+    session = await unwrapFunctionResult<GuestAiSessionResult>(result);
+  } catch {
+    return "";
+  }
+
+  if (typeof session?.guest_session_token !== "string" || typeof session?.expires_at !== "string") {
+    return "";
+  }
+
+  guestFeelBetterSession = {
+    expiresAt: session.expires_at,
+    token: session.guest_session_token,
+  };
+  return guestFeelBetterSession.token;
+}
+
 export async function getExchangeRate(
   baseCurrency: string,
   rateDate: string,
@@ -273,8 +315,10 @@ export async function getFeelBetterReview({
   monthlyExpenseExpected: number;
   language: string;
 }): Promise<FeelBetterResult> {
+  const guestSessionToken = await getGuestFeelBetterSessionToken();
   const result = await base44.functions.invoke("feelBetterReview", {
     currency,
+    ...(guestSessionToken ? { guest_session_token: guestSessionToken } : {}),
     monthly_income_expected: monthlyIncomeExpected,
     monthly_expense_expected: monthlyExpenseExpected,
     language,

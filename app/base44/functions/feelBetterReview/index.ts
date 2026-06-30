@@ -1,5 +1,9 @@
+import { createClientFromRequest } from "npm:@base44/sdk";
+
 type FeelBetterRequest = {
   currency?: unknown;
+  guest_session_token?: unknown;
+  issue_guest_session?: unknown;
   monthly_income_expected?: unknown;
   monthly_expense_expected?: unknown;
   language?: unknown;
@@ -19,10 +23,30 @@ type GeneratedReview = {
   comment: string;
 };
 
+type AuthenticatedUser = {
+  id?: unknown;
+  email?: unknown;
+};
+
+type GuestAiSession = {
+  expires_at: string;
+  id: string;
+  ip_hash: string;
+  issued_at: string;
+  version: 1;
+};
+
 const DEFAULT_MODEL = "google/gemma-3-4b-it:cheapest";
 const MAX_TITLE_LENGTH = 80;
 const MAX_COMMENT_LENGTH = 480;
 const HF_MAX_TOKENS = 150;
+const HF_AUTH_RATE_LIMIT_WINDOW_MS = 60_000;
+const HF_AUTH_RATE_LIMIT_MAX_REQUESTS = 5;
+const HF_GUEST_RATE_LIMIT_WINDOW_MS = 60 * 60_000;
+const HF_GUEST_RATE_LIMIT_MAX_REQUESTS = 2;
+const HF_GUEST_SESSION_TTL_MS = 12 * 60 * 60_000;
+const HF_GUEST_SESSION_ISSUE_WINDOW_MS = 60 * 60_000;
+const HF_GUEST_SESSION_ISSUE_MAX_REQUESTS = 5;
 const CREDIT_SLEEP_COMMENT = "I'm sleeping now. Not gonna work.";
 const SUPPORTED_CURRENCIES = new Set(["HKD", "USD", "JPY", "EUR", "GBP", "CNY", "TWD", "SGD", "AUD", "CAD"]);
 const CURRENCY_CONTEXTS: Record<string, string> = {
@@ -37,6 +61,10 @@ const CURRENCY_CONTEXTS: Record<string, string> = {
   AUD: "Australia",
   CAD: "Canada",
 };
+
+const huggingFaceRateLimits = new Map<string, { windowStart: number; count: number }>();
+const guestSessionIssueLimits = new Map<string, { windowStart: number; count: number }>();
+const textEncoder = new TextEncoder();
 
 const json = (body: unknown, status = 200) =>
   Response.json(body, {
@@ -64,6 +92,263 @@ function normalizeCurrency(value: unknown) {
 
 function getCurrencyContext(currency: string) {
   return CURRENCY_CONTEXTS[currency] || "the selected currency region";
+}
+
+function getRateLimitNumber(envName: string, fallback: number) {
+  const configuredValue = Number(Deno.env.get(envName));
+  return Number.isFinite(configuredValue) && configuredValue > 0
+    ? Math.floor(configuredValue)
+    : fallback;
+}
+
+function getGuestSessionSecret() {
+  return (
+    Deno.env.get("FEEL_BETTER_GUEST_TOKEN_SECRET") ||
+    Deno.env.get("HUGGINGFACE_GUEST_TOKEN_SECRET") ||
+    Deno.env.get("HUGGINGFACE_API_TOKEN") ||
+    Deno.env.get("HF_TOKEN") ||
+    ""
+  );
+}
+
+function base64UrlEncode(value: Uint8Array | string) {
+  const bytes = typeof value === "string" ? textEncoder.encode(value) : value;
+  let binary = "";
+
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+function base64UrlDecode(value: string) {
+  const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+  return atob(padded);
+}
+
+async function hmacSha256(secret: string, message: string) {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    textEncoder.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, textEncoder.encode(message));
+  return new Uint8Array(signature);
+}
+
+async function getIpHash(ip: string, secret: string) {
+  return base64UrlEncode(await hmacSha256(secret, `ip:${ip}`));
+}
+
+function randomTokenId() {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return base64UrlEncode(bytes);
+}
+
+function timingSafeEqual(left: string, right: string) {
+  const leftBytes = textEncoder.encode(left);
+  const rightBytes = textEncoder.encode(right);
+  let diff = leftBytes.length ^ rightBytes.length;
+  const maxLength = Math.max(leftBytes.length, rightBytes.length);
+
+  for (let index = 0; index < maxLength; index += 1) {
+    diff |= (leftBytes[index] || 0) ^ (rightBytes[index] || 0);
+  }
+
+  return diff === 0;
+}
+
+function getClientIp(req: Request) {
+  const forwardedFor = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  return (
+    forwardedFor ||
+    req.headers.get("x-real-ip")?.trim() ||
+    req.headers.get("cf-connecting-ip")?.trim() ||
+    "unknown"
+  );
+}
+
+async function getAuthenticatedUser(req: Request): Promise<AuthenticatedUser | null> {
+  try {
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+
+    if (!user || typeof user !== "object") return null;
+
+    const userId = (user as AuthenticatedUser).id;
+    const email = (user as AuthenticatedUser).email;
+
+    if (typeof userId === "string" && userId.trim()) return user as AuthenticatedUser;
+    if (typeof email === "string" && email.trim()) return user as AuthenticatedUser;
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
+function getAuthenticatedUserKey(user: AuthenticatedUser) {
+  if (typeof user.id === "string" && user.id.trim()) return `user:${user.id.trim()}`;
+  if (typeof user.email === "string" && user.email.trim()) return `email:${user.email.trim().toLowerCase()}`;
+  return "";
+}
+
+function getAuthenticatedHuggingFaceRateLimitPolicy(user: AuthenticatedUser) {
+  return {
+    key: getAuthenticatedUserKey(user),
+    maxRequests: getRateLimitNumber("HUGGINGFACE_AUTH_RATE_LIMIT_MAX_REQUESTS", HF_AUTH_RATE_LIMIT_MAX_REQUESTS),
+    windowMs: getRateLimitNumber("HUGGINGFACE_AUTH_RATE_LIMIT_WINDOW_MS", HF_AUTH_RATE_LIMIT_WINDOW_MS),
+    includeIpBucket: true,
+  };
+}
+
+function consumeRateLimitBucket(key: string, now: number, maxRequests: number, windowMs: number) {
+  const existing = huggingFaceRateLimits.get(key);
+
+  if (!existing || now - existing.windowStart >= windowMs) {
+    huggingFaceRateLimits.set(key, { windowStart: now, count: 1 });
+    return true;
+  }
+
+  if (existing.count >= maxRequests) return false;
+
+  existing.count += 1;
+  return true;
+}
+
+function cleanupExpiredRateLimitBuckets(now: number, windowMs: number) {
+  if (huggingFaceRateLimits.size < 500) return;
+
+  for (const [key, value] of huggingFaceRateLimits.entries()) {
+    if (now - value.windowStart >= windowMs) {
+      huggingFaceRateLimits.delete(key);
+    }
+  }
+}
+
+function consumeGuestSessionIssueLimit(req: Request) {
+  const now = Date.now();
+  const windowMs = getRateLimitNumber("HUGGINGFACE_GUEST_SESSION_ISSUE_WINDOW_MS", HF_GUEST_SESSION_ISSUE_WINDOW_MS);
+  const maxRequests = getRateLimitNumber("HUGGINGFACE_GUEST_SESSION_ISSUE_MAX_REQUESTS", HF_GUEST_SESSION_ISSUE_MAX_REQUESTS);
+  const key = `issue:${getClientIp(req)}`;
+  const existing = guestSessionIssueLimits.get(key);
+
+  if (!existing || now - existing.windowStart >= windowMs) {
+    guestSessionIssueLimits.set(key, { windowStart: now, count: 1 });
+    return true;
+  }
+
+  if (existing.count >= maxRequests) return false;
+
+  existing.count += 1;
+  return true;
+}
+
+async function createGuestAiSessionToken(req: Request) {
+  const secret = getGuestSessionSecret();
+  if (!secret || !consumeGuestSessionIssueLimit(req)) return null;
+
+  const now = Date.now();
+  const ttlMs = getRateLimitNumber("HUGGINGFACE_GUEST_SESSION_TTL_MS", HF_GUEST_SESSION_TTL_MS);
+  const payload: GuestAiSession = {
+    expires_at: new Date(now + ttlMs).toISOString(),
+    id: randomTokenId(),
+    ip_hash: await getIpHash(getClientIp(req), secret),
+    issued_at: new Date(now).toISOString(),
+    version: 1,
+  };
+  const encodedPayload = base64UrlEncode(JSON.stringify(payload));
+  const signature = base64UrlEncode(await hmacSha256(secret, encodedPayload));
+
+  return {
+    expires_at: payload.expires_at,
+    guest_session_token: `${encodedPayload}.${signature}`,
+  };
+}
+
+async function verifyGuestAiSessionToken(token: unknown, req: Request) {
+  if (typeof token !== "string" || !token.trim()) return null;
+
+  const secret = getGuestSessionSecret();
+  if (!secret) return null;
+
+  const [encodedPayload, signature, extra] = token.trim().split(".");
+  if (!encodedPayload || !signature || extra !== undefined) return null;
+
+  const expectedSignature = base64UrlEncode(await hmacSha256(secret, encodedPayload));
+  if (!timingSafeEqual(signature, expectedSignature)) return null;
+
+  let payload: GuestAiSession;
+
+  try {
+    payload = JSON.parse(base64UrlDecode(encodedPayload));
+  } catch {
+    return null;
+  }
+
+  if (payload?.version !== 1 || typeof payload.id !== "string" || !payload.id) return null;
+  const expiresAt = typeof payload.expires_at === "string" ? Date.parse(payload.expires_at) : Number.NaN;
+  if (!Number.isFinite(expiresAt) || expiresAt <= Date.now()) return null;
+
+  const expectedIpHash = await getIpHash(getClientIp(req), secret);
+  if (!timingSafeEqual(payload.ip_hash, expectedIpHash)) return null;
+
+  return payload;
+}
+
+function consumeHuggingFaceRateLimit({
+  key,
+  maxRequests,
+  windowMs,
+  includeIpBucket,
+  req,
+}: {
+  key: string;
+  maxRequests: number;
+  windowMs: number;
+  includeIpBucket: boolean;
+  req: Request;
+}) {
+  if (!key) return false;
+
+  const ipKey = `ip:${getClientIp(req)}`;
+
+  const now = Date.now();
+  cleanupExpiredRateLimitBuckets(now, windowMs);
+
+  const primaryBucket = huggingFaceRateLimits.get(key);
+  const ipBucket = huggingFaceRateLimits.get(ipKey);
+  const primaryBlocked = primaryBucket && now - primaryBucket.windowStart < windowMs && primaryBucket.count >= maxRequests;
+  const ipBlocked = ipBucket && now - ipBucket.windowStart < windowMs && ipBucket.count >= maxRequests;
+
+  if (primaryBlocked || (includeIpBucket && ipBlocked)) return false;
+
+  if (!consumeRateLimitBucket(key, now, maxRequests, windowMs)) return false;
+  return !includeIpBucket || consumeRateLimitBucket(ipKey, now, maxRequests, windowMs);
+}
+
+async function canUseHuggingFaceReview(req: Request, guestSessionToken: unknown) {
+  const user = await getAuthenticatedUser(req);
+  const guestSession = user ? null : await verifyGuestAiSessionToken(guestSessionToken, req);
+
+  if (!user && !guestSession) return false;
+
+  return consumeHuggingFaceRateLimit({
+    ...(guestSession
+      ? {
+          key: `guest-session:${guestSession.id}`,
+          maxRequests: getRateLimitNumber("HUGGINGFACE_GUEST_RATE_LIMIT_MAX_REQUESTS", HF_GUEST_RATE_LIMIT_MAX_REQUESTS),
+          windowMs: getRateLimitNumber("HUGGINGFACE_GUEST_RATE_LIMIT_WINDOW_MS", HF_GUEST_RATE_LIMIT_WINDOW_MS),
+          includeIpBucket: true,
+        }
+      : getAuthenticatedHuggingFaceRateLimitPolicy(user)),
+    req,
+  });
 }
 
 function clampComment(value: string) {
@@ -403,6 +688,14 @@ Deno.serve(async (req) => {
     return json({ error: "Invalid JSON request body." }, 400);
   }
 
+  if (body.issue_guest_session === true) {
+    const guestSession = await createGuestAiSessionToken(req);
+    if (!guestSession) {
+      return json({ error: "Unable to issue guest AI session." }, 429);
+    }
+    return json(guestSession);
+  }
+
   const income = toNumber(body.monthly_income_expected);
   const expense = toNumber(body.monthly_expense_expected);
   const language = normalizeLanguage(body.language);
@@ -418,11 +711,13 @@ Deno.serve(async (req) => {
   let comment = localComment(facts, language);
 
   try {
-    const hfReview = await getHuggingFaceReview(facts, language, currency);
-    if (hfReview) {
-      title = hfReview.title;
-      comment = hfReview.comment;
-      source = "huggingface";
+    if (await canUseHuggingFaceReview(req, body.guest_session_token)) {
+      const hfReview = await getHuggingFaceReview(facts, language, currency);
+      if (hfReview) {
+        title = hfReview.title;
+        comment = hfReview.comment;
+        source = "huggingface";
+      }
     }
   } catch {
     source = "local";
