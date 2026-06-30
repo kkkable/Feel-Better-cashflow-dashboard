@@ -75,6 +75,9 @@ const naturalLanguagePattern = /\b(i|i'm|i am|my|me|mom|mother|dad|father|friend
 const localOnlyDisqualifierPattern = /\b(i|i'm|i am|my|me|mom|mother|dad|father|friend|family|bro|brother|sis|sister|buy|bought|paid|pay|spend|spent|sent|receive|received|recieve|receice|get|got|from|with|for|as|and|then|was|were|refund|reimbursement|rebate|cashback|red packet|lai see|gift)\b/i;
 const amountPattern = /(?:HKD|HK\$|[$＄])?\s*\d+(?:\.\d+)?|\d+(?:\.\d+)?\s*(?:dollars?|hkd)/gi;
 const simpleModifierPattern = /^(?:today|yesterday|monthly|recurring)(?:\s+(?:today|yesterday|monthly|recurring))*$/i;
+const SIGNAL_LINK_ATTEMPT_LIMIT = 5;
+const SIGNAL_LINK_ATTEMPT_WINDOW_MS = 10 * 60 * 1000;
+const SIGNAL_LINK_BLOCK_MS = 15 * 60 * 1000;
 
 const json = (body: unknown, status = 200) =>
   Response.json(body, {
@@ -92,6 +95,16 @@ function requireBridgeSecret(req: Request) {
 
 function normalizeSender(value: unknown) {
   return value === undefined || value === null ? "" : String(value).trim();
+}
+
+function normalizeSenderKey(value: string) {
+  return normalizeSender(value).toLowerCase().slice(0, 160);
+}
+
+function secondsUntil(isoDate: string, now: Date) {
+  const until = new Date(isoDate).getTime();
+  if (!Number.isFinite(until)) return 0;
+  return Math.max(0, Math.ceil((until - now.getTime()) / 1000));
 }
 
 function normalizeName(value: string) {
@@ -521,6 +534,76 @@ async function findConnectedConnection(base44: any, sender: string) {
   }) || null;
 }
 
+async function getSignalLinkAttempt(base44: any, sender: string) {
+  const senderKey = normalizeSenderKey(sender);
+  if (!senderKey) return null;
+
+  const attempts = await base44.asServiceRole.entities.SignalLinkAttempt.filter({
+    sender_key: senderKey,
+  });
+
+  return attempts[0] || null;
+}
+
+async function getSignalLinkRateStatus(base44: any, sender: string, now: Date) {
+  const attempt = await getSignalLinkAttempt(base44, sender);
+  const blockedUntil = String(attempt?.blocked_until || "");
+
+  if (blockedUntil && secondsUntil(blockedUntil, now) > 0) {
+    return {
+      blocked: true,
+      retryAfterSeconds: secondsUntil(blockedUntil, now),
+    };
+  }
+
+  return {
+    blocked: false,
+    retryAfterSeconds: 0,
+  };
+}
+
+async function recordSignalLinkAttempt(base44: any, sender: string, now: Date, succeeded: boolean) {
+  const senderKey = normalizeSenderKey(sender);
+  if (!senderKey) return;
+
+  const nowIso = now.toISOString();
+  const existingAttempt = await getSignalLinkAttempt(base44, sender);
+
+  if (succeeded) {
+    if (existingAttempt?.id) {
+      await base44.asServiceRole.entities.SignalLinkAttempt.update(existingAttempt.id, {
+        window_started_at: nowIso,
+        attempt_count: 0,
+        blocked_until: "",
+        last_attempt_at: nowIso,
+      });
+    }
+    return;
+  }
+
+  const previousWindowStart = String(existingAttempt?.window_started_at || "");
+  const previousWindowMs = new Date(previousWindowStart).getTime();
+  const isSameWindow = Number.isFinite(previousWindowMs) && now.getTime() - previousWindowMs < SIGNAL_LINK_ATTEMPT_WINDOW_MS;
+  const attemptCount = isSameWindow ? Number(existingAttempt?.attempt_count || 0) + 1 : 1;
+  const windowStartedAt = isSameWindow ? previousWindowStart : nowIso;
+  const blockedUntil = attemptCount >= SIGNAL_LINK_ATTEMPT_LIMIT
+    ? new Date(now.getTime() + SIGNAL_LINK_BLOCK_MS).toISOString()
+    : "";
+  const patch = {
+    sender_key: senderKey,
+    window_started_at: windowStartedAt,
+    attempt_count: attemptCount,
+    blocked_until: blockedUntil,
+    last_attempt_at: nowIso,
+  };
+
+  if (existingAttempt?.id) {
+    await base44.asServiceRole.entities.SignalLinkAttempt.update(existingAttempt.id, patch);
+  } else {
+    await base44.asServiceRole.entities.SignalLinkAttempt.create(patch);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return json({ ok: true });
@@ -553,6 +636,14 @@ Deno.serve(async (req) => {
   let connection = await findConnectedConnection(base44, sender);
 
   if (!connection && connectionToken) {
+    const rateStatus = await getSignalLinkRateStatus(base44, sender, now);
+    if (rateStatus.blocked) {
+      return json({
+        ok: true,
+        reply: `Too many Signal connection-code attempts. Try again in ${Math.ceil(rateStatus.retryAfterSeconds / 60)} minutes.`,
+      });
+    }
+
     const matches = await base44.asServiceRole.entities.SignalConnection.filter({
       connection_token: connectionToken,
       status: "pending",
@@ -560,6 +651,7 @@ Deno.serve(async (req) => {
     const connection = matches[0];
 
     if (!connection || String(connection.token_expires_at || "") < nowIso) {
+      await recordSignalLinkAttempt(base44, sender, now, false);
       return json({
         ok: true,
         reply: "This Signal connection code expired. Open the website and generate a fresh Signal setup code.",
@@ -573,6 +665,7 @@ Deno.serve(async (req) => {
       last_connected_at: nowIso,
       last_message_at: nowIso,
     });
+    await recordSignalLinkAttempt(base44, sender, now, true);
 
     return json({
       ok: true,

@@ -1,0 +1,18 @@
+{
+  "name": "SignalLinkAttempt",
+  "type": "object",
+  "properties": {
+    "sender_key": { "type": "string", "description": "Normalized Signal sender used for link-code rate limiting." },
+    "window_started_at": { "type": "string", "format": "date-time", "description": "Start of the active attempt window." },
+    "attempt_count": { "type": "integer", "description": "Failed connection-code attempts in the active window.", "default": 0 },
+    "blocked_until": { "type": "string", "format": "date-time", "description": "When the temporary link-code block expires." },
+    "last_attempt_at": { "type": "string", "format": "date-time", "description": "Most recent link-code attempt time." }
+  },
+  "required": ["sender_key", "window_started_at", "attempt_count", "last_attempt_at"],
+  "rls": {
+    "create": false,
+    "read": false,
+    "update": false,
+    "delete": false
+  }
+}

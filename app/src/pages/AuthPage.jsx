@@ -53,6 +53,12 @@ export default function AuthPage({
     }
   }
 
+  function showVerificationStep(nextMessage) {
+    setNeedsVerification(true);
+    setResendCooldown(OTP_RESEND_COOLDOWN_SECONDS);
+    setMessage(nextMessage);
+  }
+
   useEffect(() => {
     if (!isGuestPromptOpen) return undefined;
 
@@ -108,8 +114,7 @@ export default function AuthPage({
         return;
       } catch (loginError) {
         if (requiresEmailVerification(loginError)) {
-          setNeedsVerification(true);
-          setMessage("Enter the verification code sent to your email.");
+          showVerificationStep("Enter the verification code sent to your email.");
           return;
         }
 
@@ -124,9 +129,7 @@ export default function AuthPage({
       });
       rememberIfNeeded();
       setRegisteredThisSession(true);
-      setNeedsVerification(true);
-      setResendCooldown(OTP_RESEND_COOLDOWN_SECONDS);
-      setMessage("Account created. Enter the verification code sent to your email.");
+      showVerificationStep("Account created. Enter the verification code sent to your email.");
     } catch (continueError) {
       setError(getErrorMessage(continueError, "Unable to login or register."));
     } finally {
