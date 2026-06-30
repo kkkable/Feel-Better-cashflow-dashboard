@@ -4,6 +4,8 @@ A personal finance dashboard that makes cashflow tracking faster, simpler, and l
 
 Live app: [feelbetter-cashflow-dashboard.base44.app](https://feelbetter-cashflow-dashboard.base44.app/)
 
+![Dashboard screenshot](docs/screenshots/dashboard-guest.png)
+
 ## What It Is
 
 Feel-Better Cashflow Dashboard, short form **F-finance**, is built for people who want to understand their money without using a heavy accounting tool.
@@ -18,15 +20,6 @@ The app focuses on everyday cashflow:
 - Can I record spending quickly without opening a complex form?
 
 It is designed to feel simple first, but still useful when the user wants more detail.
-
-## Screenshot Placeholders
-
-Screenshots will be added here after the final guest-mode captures are provided.
-
-<!-- Main dashboard screenshot placeholder: docs/screenshots/dashboard-guest.png -->
-<!-- Record page screenshot placeholder: docs/screenshots/record-guest.png -->
-<!-- Connect bot page screenshot placeholder: docs/screenshots/connect-bot-guest.png -->
-<!-- Feel Better mode screenshot placeholder: docs/screenshots/feel-better-guest.png -->
 
 ## Feature Highlights
 
@@ -60,9 +53,7 @@ It includes:
 
 The dashboard also uses a subtle "money weather" idea. Better cashflow can feel sunny, normal cashflow can feel cloudy, and weaker cashflow can feel rainy.
 
-Screenshot slot:
-
-> Add guest dashboard screenshot here.
+![Dashboard screenshot](docs/screenshots/dashboard-guest.png)
 
 ## Record Page
 
@@ -83,7 +74,7 @@ The goal is to keep basic input quick while still allowing corrections when mist
 
 Screenshot slot:
 
-> Add guest Record page screenshot here.
+> Record page screenshot will be added here.
 
 ## Connect Bot Page
 
@@ -110,9 +101,7 @@ Supported bot-style flows:
 - recurring monthly detection
 - AI-assisted parsing for sentence-style messages
 
-Screenshot slot:
-
-> Add guest Connect Bot page screenshot here.
+![Connect Bot screenshot](docs/screenshots/connect-bot-guest.png)
 
 ## Feel Better Mode
 
@@ -133,9 +122,7 @@ Then the app returns a short comment that is:
 
 It is meant to make money review feel less intimidating.
 
-Screenshot slot:
-
-> Add guest Feel Better mode screenshot here.
+![Feel Better mode screenshot](docs/screenshots/feel-better-guest.png)
 
 ## Why It Is Different
 
