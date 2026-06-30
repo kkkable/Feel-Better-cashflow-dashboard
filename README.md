@@ -1,187 +1,175 @@
 # Feel-Better Cashflow Dashboard
 
-A personal finance dashboard for tracking income, expenses, cashflow, and quick money notes without turning budgeting into accounting homework.
+A personal finance dashboard that makes cashflow tracking faster, simpler, and less stressful.
 
-![Cashflow dashboard screenshot](https://image.thum.io/get/width/1400/crop/900/https://f-finance.base44.app)
+Live app: [feelbetter-cashflow-dashboard.base44.app](https://feelbetter-cashflow-dashboard.base44.app/)
 
-## 📖 Overview
+## What It Is
 
-Feel-Better Cashflow Dashboard, short form **F-finance**, is built for people who want a fast and forgiving way to understand their money.
+Feel-Better Cashflow Dashboard, short form **F-finance**, is built for people who want to understand their money without using a heavy accounting tool.
 
-The app focuses on:
+The app focuses on everyday cashflow:
 
-- simple income and expense tracking
-- monthly cashflow projection
-- one-time and recurring record management
-- quick capture from chat-style messages
-- short, kind AI money feedback
-- a clean dashboard that is easy to scan
+- How much came in this month?
+- How much went out this month?
+- What is left?
+- Which records are monthly, and which are one-time?
+- What does the next few months look like?
+- Can I record spending quickly without opening a complex form?
 
-It is not a full accounting system. It is a lightweight personal cashflow tool designed around everyday usage.
+It is designed to feel simple first, but still useful when the user wants more detail.
 
-## ✨ Features
+## Screenshot Placeholders
 
-| Area | What it does |
+Screenshots will be added here after the final guest-mode captures are provided.
+
+<!-- Main dashboard screenshot placeholder: docs/screenshots/dashboard-guest.png -->
+<!-- Record page screenshot placeholder: docs/screenshots/record-guest.png -->
+<!-- Connect bot page screenshot placeholder: docs/screenshots/connect-bot-guest.png -->
+<!-- Feel Better mode screenshot placeholder: docs/screenshots/feel-better-guest.png -->
+
+## Feature Highlights
+
+| Feature | Why it is useful |
 |---|---|
-| Dashboard | Shows this month's income, expense, net cashflow, recurring totals, recent records, and forecast balance. |
-| Records | Adds, imports, edits, deletes, and separates monthly and one-time income/expense records. |
-| CSV Import | Imports income and expense records from CSV templates. |
-| Quick Capture | Converts short money messages into reviewable drafts before saving. |
-| Bot Capture | Includes Telegram and Signal-style capture flows for sending money notes from chat. |
-| Feel Better Mode | Reviews expected income and expense, then returns a short, humorous, kind money comment. |
-| Guest Mode | Lets users try the app before registering, with temporary guest data. |
-| Multi-currency UI | Lets users choose a display currency symbol and gives AI advice using the selected currency context. |
-| Language | Supports English and Traditional Chinese UI text. |
-| Tutorial Tips | Shows guided page tips for first-time users. |
-| Money Weather | Uses subtle dashboard weather backgrounds to reflect cashflow mood. |
+| Guest mode | Lets people try the dashboard before creating an account. Guest data is temporary. |
+| Simple and detailed modes | Simple mode keeps input light. Detailed mode gives more control over records. |
+| Monthly and one-time records | Recurring income/expenses stay separate from non-monthly records for cleaner planning. |
+| Cashflow projection | Shows future months using recurring records plus one-time records in the month they happen. |
+| Recent records | Dashboard focuses on the latest non-monthly income and expense records instead of overwhelming the user. |
+| CSV import | Adds many records at once from a single file. |
+| Multi-currency display | Users can choose a currency symbol and get advice in a matching currency context. |
+| Traditional Chinese support | The interface can switch between English and Traditional Chinese. |
 
-## 🛠️ Tech Stack
+## Dashboard
+
+The dashboard gives a fast view of the user's current money position.
+
+It includes:
+
+- this month income
+- this month expense
+- net cashflow
+- savings rate
+- recurring monthly income
+- recurring monthly expense
+- forecast projection
+- recent income
+- recent expense
+- category breakdown when enough data exists
+
+The dashboard also uses a subtle "money weather" idea. Better cashflow can feel sunny, normal cashflow can feel cloudy, and weaker cashflow can feel rainy.
+
+Screenshot slot:
+
+> Add guest dashboard screenshot here.
+
+## Record Page
+
+The Record page is where users add and fix data.
+
+It supports:
+
+- quick income entry
+- quick expense entry
+- recurring monthly checkbox
+- CSV import
+- record management
+- edit and delete actions
+- monthly vs non-monthly record views
+- pagination for larger record lists
+
+The goal is to keep basic input quick while still allowing corrections when mistakes happen.
+
+Screenshot slot:
+
+> Add guest Record page screenshot here.
+
+## Connect Bot Page
+
+The Connect Bot page is for quick capture from chat.
+
+Users can write natural money messages such as:
+
+```text
+lunch 58
+mtr 12 coffee 42
+salary 30000
+rent 15000 monthly
+I get 450 rebate from credit card
+Mom gave me 300 as red packet and I bought coffee for 50
+```
+
+The bot flow turns messages into draft records first, so the user can review and fix them before saving.
+
+Supported bot-style flows:
+
+- Telegram
+- Signal bridge
+- draft review before saving
+- recurring monthly detection
+- AI-assisted parsing for sentence-style messages
+
+Screenshot slot:
+
+> Add guest Connect Bot page screenshot here.
+
+## Feel Better Mode
+
+Feel Better mode is a lightweight AI money check.
+
+The user enters:
+
+- expected monthly income
+- expected monthly expense
+
+Then the app returns a short comment that is:
+
+- kind
+- direct
+- humorous
+- based on the selected currency context
+- intentionally short, not a long finance lecture
+
+It is meant to make money review feel less intimidating.
+
+Screenshot slot:
+
+> Add guest Feel Better mode screenshot here.
+
+## Why It Is Different
+
+Many finance apps are powerful but ask users to behave like accountants.
+
+F-finance is built around a different workflow:
+
+1. Open the app.
+2. Record money quickly.
+3. Review obvious cashflow numbers.
+4. Fix mistakes later.
+5. Use chat-style capture when manual input feels too slow.
+
+The interesting part is not only the dashboard. It is the combination of simple input, reviewable drafts, recurring planning, guest trial, and short AI feedback.
+
+## Built With
 
 | Category | Technology |
 |---|---|
 | Frontend | React, Vite |
-| Styling | Tailwind CSS, custom dashboard CSS |
+| Styling | Tailwind CSS, custom dashboard styles |
 | Backend | Base44 backend functions |
 | Database | Base44 entities |
-| AI | Hugging Face compatible inference API |
-| Messaging | Telegram bot flow, Signal bridge flow |
-| Charts / UI | Custom React components, Lucide icons |
-| Testing | Vitest |
+| AI | Hugging Face compatible inference |
+| Bot flows | Telegram and Signal-style capture |
 
-## 📁 Project Structure
+## Repository Notes
 
-```text
-Feel-Better-cashflow-dashboard/
-├── app/
-│   ├── base44/
-│   │   ├── entities/              # Base44 entity schemas
-│   │   └── functions/             # Base44 backend functions
-│   ├── src/
-│   │   ├── api/                   # Base44 client and finance API wrapper
-│   │   ├── components/            # Dashboard, forms, UI components
-│   │   ├── lib/                   # Money logic, projections, CSV import, tests
-│   │   ├── pages/                 # Auth, onboarding, dashboard pages
-│   │   └── main.jsx               # React entry point
-│   ├── package.json
-│   └── vite.config.js
-├── LICENSE
-└── README.md
-```
+This public repository contains sanitized source code only.
 
-## 🚀 Getting Started
+It does not include:
 
-This repository contains the source code for a Base44 app.
-
-You can run the React frontend locally for development, but full auth, database, backend functions, bot flows, and deployed app behavior require a configured Base44 project.
-
-### Prerequisites
-
-- Node.js
-- npm
-- A Base44 project if you want full backend/database functionality
-- Optional API credentials for Hugging Face, Telegram, and Signal bridge features
-
-### Installation
-
-```bash
-git clone https://github.com/kkkable/Feel-Better-cashflow-dashboard.git
-cd Feel-Better-cashflow-dashboard/app
-npm install
-```
-
-### Running the Frontend
-
-```bash
-npm run dev
-```
-
-The frontend uses the Base44 SDK client in:
-
-```text
-app/src/api/base44Client.js
-```
-
-For a real Base44 app, replace the placeholder app ID:
-
-```js
-appId: 'YOUR_BASE44_APP_ID'
-```
-
-## ⚙️ Configuration
-
-Sensitive values are read from environment variables inside Base44 backend functions. Do not commit real tokens or secrets.
-
-| Variable | Used for | Required |
-|---|---|---|
-| `HUGGINGFACE_ENABLED` | Enables Hugging Face AI review/parsing when set appropriately. | No |
-| `HUGGINGFACE_API_TOKEN` / `HF_TOKEN` | Hugging Face inference access token. | For AI features |
-| `HUGGINGFACE_MODEL` | Optional model override. | No |
-| `HUGGINGFACE_INFERENCE_URL` | Optional custom inference endpoint. | No |
-| `FEEL_BETTER_GUEST_TOKEN_SECRET` | Signs guest AI session tokens. | Recommended |
-| `HUGGINGFACE_AUTH_RATE_LIMIT_MAX_REQUESTS` | Optional logged-in AI rate limit override. | No |
-| `HUGGINGFACE_GUEST_RATE_LIMIT_MAX_REQUESTS` | Optional guest AI rate limit override. | No |
-| `TELEGRAM_BOT_TOKEN` | Telegram bot API token. | For Telegram bot |
-| `TELEGRAM_WEBHOOK_SECRET` | Telegram webhook validation secret. | For Telegram bot |
-| `TELEGRAM_CHECKIN_SECRET` | Check-in scheduler validation secret. | For Telegram reminders |
-| `SIGNAL_BRIDGE_SECRET` | Signal bridge/webhook validation secret. | For Signal bridge |
-
-## 🧪 Testing
-
-The project includes Vitest tests for finance logic, projections, CSV import, tutorial state, money formatting, quick capture parsing, and auth/guest flows.
-
-```bash
-cd app
-npm test
-```
-
-## 📦 Deployment
-
-The app is structured for Base44 deployment:
-
-- `app/base44/entities/` defines the database entities.
-- `app/base44/functions/` contains backend functions.
-- `app/src/` contains the frontend.
-
-Deployment requires your own Base44 workspace and configured secrets. This public repository does not include private deployment credentials, API keys, IP addresses, or production-only notes.
-
-## 🗺️ Roadmap
-
-Possible future improvements:
-
-- [ ] Improve dashboard chart interactions.
-- [ ] Add more CSV validation feedback.
-- [ ] Add more bot message examples.
-- [ ] Add more automated tests for Base44 function edge cases.
-- [ ] Improve mobile layout polish.
-
-## 🤝 Contributing
-
-Contributions are welcome.
-
-Good first areas to review:
-
-- UI polish
-- accessibility improvements
-- test coverage
-- CSV import edge cases
-- clearer onboarding copy
-
-Before opening a pull request:
-
-```bash
-cd app
-npm test
-npm run build
-```
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-See [LICENSE](LICENSE) for details.
-
-## 🙋 Author
-
-Created by **Sin Pui Keung**.
-
-GitHub: [@kkkable](https://github.com/kkkable)
+- production API keys
+- bot tokens
+- server IP addresses
+- private deployment notes
+- private environment files
