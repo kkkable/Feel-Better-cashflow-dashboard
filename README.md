@@ -4,7 +4,7 @@ A personal finance dashboard that makes cashflow tracking faster, simpler, and l
 
 Live app: [feelbetter-cashflow-dashboard.base44.app](https://feelbetter-cashflow-dashboard.base44.app/)
 
-![Dashboard screenshot](docs/screenshots/guest dashboard.png)
+![Dashboard screenshot](docs/screenshots/guest_dashboard.png)
 
 ## What It Is
 
