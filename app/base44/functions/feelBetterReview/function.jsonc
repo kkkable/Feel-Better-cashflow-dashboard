@@ -1,0 +1,5 @@
+{
+  "name": "feelBetterReview",
+  "entry": "index.ts",
+  "description": "Review simple monthly income and expense expectations with a short, kind, humorous money comment."
+}

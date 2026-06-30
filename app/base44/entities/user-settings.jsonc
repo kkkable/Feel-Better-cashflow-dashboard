@@ -1,0 +1,78 @@
+{
+  "name": "UserSettings",
+  "type": "object",
+  "properties": {
+    "base_currency": {
+      "type": "string",
+      "description": "Base reporting currency.",
+      "default": "HKD",
+      "enum": ["HKD", "USD", "JPY", "EUR", "GBP", "CNY", "TWD", "SGD", "AUD", "CAD"]
+    },
+    "expense_mode": {
+      "type": "string",
+      "description": "Selected expense workflow mode.",
+      "default": "simple",
+      "enum": ["simple", "detailed"]
+    },
+    "projection_months": {
+      "type": "integer",
+      "description": "Number of months to show in cashflow projection.",
+      "default": 6,
+      "enum": [3, 6, 12]
+    },
+    "include_actual_spending_in_projection": {
+      "type": "boolean",
+      "description": "Whether detailed actual spending trends affect projections.",
+      "default": false
+    },
+    "language": {
+      "type": "string",
+      "description": "Preferred interface language.",
+      "default": "en",
+      "enum": ["en", "zh-Hant"]
+    },
+    "onboarding_completed": {
+      "type": "boolean",
+      "description": "Whether the user completed initial finance setup.",
+      "default": false
+    },
+    "tutorial_dismissed": {
+      "type": "boolean",
+      "description": "Whether the user dismissed all in-app tutorial tips.",
+      "default": false
+    },
+    "active_tutorial_page": {
+      "type": "string",
+      "description": "Page whose unfinished tutorial is currently active.",
+      "default": "",
+      "enum": ["", "dashboard", "record", "telegram", "feel-better"]
+    },
+    "dashboard_tutorial_step": {
+      "type": "integer",
+      "description": "Dashboard tutorial step. 0 means not started, -1 means complete.",
+      "default": 0
+    },
+    "record_tutorial_step": {
+      "type": "integer",
+      "description": "Record tutorial step. 0 means not started, -1 means complete.",
+      "default": 0
+    },
+    "connect_bot_tutorial_step": {
+      "type": "integer",
+      "description": "Connect bot tutorial step. 0 means not started, -1 means complete.",
+      "default": 0
+    },
+    "feel_better_tutorial_step": {
+      "type": "integer",
+      "description": "Feel Better tutorial step. 0 means not started, -1 means complete.",
+      "default": 0
+    }
+  },
+  "required": ["base_currency", "expense_mode", "projection_months"],
+  "rls": {
+    "create": true,
+    "read": { "created_by": "{{user.email}}" },
+    "update": { "created_by": "{{user.email}}" },
+    "delete": { "created_by": "{{user.email}}" }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "ExpenseRecord",
+  "type": "object",
+  "properties": {
+    "merchant": { "type": "string", "description": "Merchant or payee." },
+    "category": {
+      "type": "string",
+      "description": "Expense category.",
+      "enum": ["housing", "food", "transport", "subscriptions", "insurance", "travel", "savings", "investment", "other"]
+    },
+    "amount_original": { "type": "number", "description": "Amount in original currency." },
+    "currency_original": { "type": "string", "description": "Original ISO currency code.", "default": "HKD" },
+    "exchange_rate_to_hkd": { "type": "number", "description": "Exchange rate to HKD.", "default": 1 },
+    "amount_hkd": { "type": "number", "description": "Amount converted to HKD." },
+    "rate_source": { "type": "string", "description": "FX rate source or manual override.", "default": "manual" },
+    "date": { "type": "string", "format": "date", "description": "Expense date." },
+    "payment_method": { "type": "string", "description": "Payment method." },
+    "is_recurring": { "type": "boolean", "description": "Whether this expense repeats.", "default": false },
+    "notes": { "type": "string", "description": "Optional notes." }
+  },
+  "required": ["merchant", "category", "amount_original", "currency_original", "exchange_rate_to_hkd", "amount_hkd", "date"],
+  "rls": {
+    "create": true,
+    "read": { "created_by": "{{user.email}}" },
+    "update": { "created_by": "{{user.email}}" },
+    "delete": { "created_by": "{{user.email}}" }
+  }
+}

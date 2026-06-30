@@ -1,0 +1,31 @@
+{
+  "name": "TelegramConnection",
+  "type": "object",
+  "properties": {
+    "owner_email": { "type": "string", "format": "email", "description": "Website account email that owns this connection." },
+    "connection_token": { "type": "string", "description": "Short-lived Telegram start token for QR linking." },
+    "token_expires_at": { "type": "string", "format": "date-time", "description": "Connection token expiry time." },
+    "telegram_chat_id": { "type": "string", "description": "Telegram chat id after linking." },
+    "telegram_user_id": { "type": "string", "description": "Telegram user id after linking." },
+    "telegram_username": { "type": "string", "description": "Telegram username after linking." },
+    "bot_username": { "type": "string", "description": "Telegram bot username." },
+    "status": {
+      "type": "string",
+      "description": "Connection status.",
+      "enum": ["pending", "connected", "disabled"],
+      "default": "pending"
+    },
+    "daily_checkin_enabled": { "type": "boolean", "description": "Whether daily Telegram check-ins are enabled.", "default": false },
+    "daily_checkin_time": { "type": "string", "description": "Preferred check-in time in HH:mm.", "default": "22:30" },
+    "last_connected_at": { "type": "string", "format": "date-time", "description": "Last successful Telegram link time." },
+    "last_message_at": { "type": "string", "format": "date-time", "description": "Last Telegram message time." },
+    "last_checkin_sent_date": { "type": "string", "format": "date", "description": "Hong Kong date when the last daily check-in was sent." }
+  },
+  "required": ["owner_email", "connection_token", "token_expires_at", "bot_username", "status"],
+  "rls": {
+    "create": true,
+    "read": { "data.owner_email": "{{user.email}}" },
+    "update": { "data.owner_email": "{{user.email}}" },
+    "delete": { "data.owner_email": "{{user.email}}" }
+  }
+}

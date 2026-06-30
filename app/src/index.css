@@ -1,0 +1,210 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 0 0% 0%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 32%;
+    --accent: 0 0% 0%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 0% 0%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 0%;
+    --input: 0 0% 0%;
+    --ring: 0 0% 0%;
+    --radius: 0;
+  }
+}
+
+.finance-weather-page {
+  background-color: #fff;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.finance-weather-page-sunny {
+  background-image: url("/assets/sunny-background.png");
+}
+
+.finance-weather-page-cloudy {
+  background-image: url("/assets/cloudy-background.png");
+}
+
+.finance-weather-page-rainy {
+  background-image: url("/assets/rainy-background.png");
+}
+
+.finance-weather-content {
+  max-width: 96rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-white text-black antialiased;
+    font-family: "Source Serif 4", Georgia, serif;
+    letter-spacing: 0;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: "Playfair Display", Georgia, serif;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    border-radius: 0;
+  }
+}
+
+@layer components {
+  .finance-page {
+    @apply relative min-h-screen bg-white text-black;
+  }
+
+  .finance-page::before {
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      #000 1px,
+      #000 2px
+    );
+    background-size: 100% 4px;
+    bottom: 0;
+    content: "";
+    left: 0;
+    opacity: 0.015;
+    pointer-events: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+  }
+
+  .finance-shell {
+    @apply relative mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8;
+  }
+
+  .finance-panel {
+    @apply border border-black bg-white shadow-none;
+  }
+
+  .finance-panel-inverted {
+    @apply border border-black bg-black text-white shadow-none;
+  }
+
+  .finance-card-title {
+    @apply text-xl font-semibold leading-tight tracking-normal text-black;
+  }
+
+  .finance-dashboard-total {
+    @apply font-semibold leading-tight text-black;
+    font-size: clamp(1.25rem, 1.75vw, 1.875rem);
+    overflow-wrap: anywhere;
+  }
+
+  .finance-label {
+    @apply text-xs font-semibold uppercase tracking-widest text-black;
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .finance-muted {
+    @apply text-sm leading-6 text-neutral-600;
+  }
+
+  .finance-input {
+    @apply flex h-11 w-full border-2 border-black bg-white px-3 py-2 text-base text-black shadow-none transition-none placeholder:text-neutral-500 focus:border-4 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+    font-family: "Source Serif 4", Georgia, serif;
+  }
+
+  .finance-error {
+    @apply border-2 border-black bg-white px-3 py-2 text-sm font-semibold text-black;
+  }
+
+  .finance-status {
+    @apply border border-black bg-neutral-100 px-3 py-2 text-sm text-black;
+  }
+
+  .finance-tutorial-overlay {
+    @apply pointer-events-none fixed inset-0 z-50 text-black;
+  }
+
+  .finance-tutorial-guide {
+    @apply pointer-events-auto fixed max-w-[calc(100vw-2rem)] text-black;
+    width: min(360px, calc(100vw - 2rem));
+  }
+
+  .finance-tutorial-card {
+    @apply relative border-2 border-black bg-white p-4 shadow-[4px_4px_0_#000] sm:p-5;
+  }
+
+  .finance-tutorial-target {
+    @apply pointer-events-none fixed border-2 border-black bg-white/20;
+    box-shadow: 4px 4px 0 #000;
+  }
+
+  .finance-tutorial-arrow-layer {
+    @apply pointer-events-none fixed inset-0 hidden h-screen w-screen text-black md:block;
+  }
+
+  .finance-tutorial-arrow-path,
+  .finance-tutorial-arrow-head {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+    stroke-width: 4;
+  }
+
+  .finance-tutorial-arrow-head {
+    stroke-width: 3;
+  }
+
+  .finance-tutorial-skip {
+    @apply border border-neutral-500 bg-white px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-neutral-600 transition-none hover:border-black hover:text-black;
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .finance-tutorial-skip:focus-visible {
+    outline: 3px solid #000;
+    outline-offset: 2px;
+  }
+
+  .finance-tutorial-back {
+    @apply border border-black bg-neutral-100 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-black transition-none hover:bg-white;
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .finance-tutorial-back:focus-visible {
+    outline: 3px solid #000;
+    outline-offset: 2px;
+  }
+
+  .finance-tutorial-primary {
+    @apply border-2 border-black bg-black px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-white transition-none hover:bg-white hover:text-black;
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .finance-tutorial-primary:focus-visible {
+    outline: 3px solid #000;
+    outline-offset: 2px;
+  }
+
+}

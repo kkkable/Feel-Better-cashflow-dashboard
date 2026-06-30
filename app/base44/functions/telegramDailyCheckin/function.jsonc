@@ -1,0 +1,17 @@
+{
+  "name": "telegramDailyCheckin",
+  "entry": "index.ts",
+  "description": "Send daily Telegram spending check-in prompts to connected users.",
+  "automations": [
+    {
+      "name": "hourly_telegram_checkin",
+      "description": "Check once per hour for users whose Telegram check-in time is due.",
+      "type": "scheduled",
+      "schedule_mode": "recurring",
+      "schedule_type": "simple",
+      "repeat_unit": "hours",
+      "repeat_interval": 1,
+      "is_active": false
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "name": "signalWebhook",
+  "entry": "index.ts",
+  "description": "Receive relayed Signal messages, link connection tokens, and create Quick Capture drafts."
+}

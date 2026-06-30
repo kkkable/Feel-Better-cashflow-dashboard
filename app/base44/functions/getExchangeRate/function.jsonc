@@ -1,0 +1,5 @@
+{
+  "name": "getExchangeRate",
+  "entry": "index.ts",
+  "description": "Fetch and cache exchange rates to HKD for foreign-currency finance records."
+}

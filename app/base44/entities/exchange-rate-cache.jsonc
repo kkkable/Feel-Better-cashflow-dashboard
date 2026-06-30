@@ -1,0 +1,19 @@
+{
+  "name": "ExchangeRateCache",
+  "type": "object",
+  "properties": {
+    "base_currency": { "type": "string", "description": "Source ISO currency code." },
+    "quote_currency": { "type": "string", "description": "Target ISO currency code." },
+    "rate_date": { "type": "string", "format": "date", "description": "Rate date." },
+    "rate": { "type": "number", "description": "Conversion rate." },
+    "provider": { "type": "string", "description": "FX provider name." },
+    "fetched_at": { "type": "string", "format": "date-time", "description": "Fetch timestamp." }
+  },
+  "required": ["base_currency", "quote_currency", "rate_date", "rate", "provider", "fetched_at"],
+  "rls": {
+    "create": false,
+    "read": false,
+    "update": false,
+    "delete": false
+  }
+}

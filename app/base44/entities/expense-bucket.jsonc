@@ -1,0 +1,25 @@
+{
+  "name": "ExpenseBucket",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string", "description": "Bucket display name." },
+    "category": {
+      "type": "string",
+      "description": "Expense category.",
+      "enum": ["housing", "food", "transport", "subscriptions", "insurance", "travel", "savings", "investment", "other"]
+    },
+    "planned_monthly_amount_hkd": { "type": "number", "description": "Planned monthly amount in HKD." },
+    "currency_original": { "type": "string", "description": "Original ISO currency code.", "default": "HKD" },
+    "exchange_rate_to_hkd": { "type": "number", "description": "Exchange rate to HKD.", "default": 1 },
+    "amount_original": { "type": "number", "description": "Original planned amount." },
+    "is_active": { "type": "boolean", "description": "Whether this bucket is active.", "default": true },
+    "notes": { "type": "string", "description": "Optional notes." }
+  },
+  "required": ["name", "category", "planned_monthly_amount_hkd", "currency_original", "exchange_rate_to_hkd", "amount_original", "is_active"],
+  "rls": {
+    "create": true,
+    "read": { "created_by": "{{user.email}}" },
+    "update": { "created_by": "{{user.email}}" },
+    "delete": { "created_by": "{{user.email}}" }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "name": "signalBridgePoll",
+  "entry": "index.ts",
+  "description": "Return due Signal daily check-in messages for the external Signal bridge."
+}

@@ -1,0 +1,5 @@
+{
+  "name": "telegramWebhook",
+  "entry": "index.ts",
+  "description": "Receive Telegram bot messages, link QR start tokens, and create Quick Capture drafts."
+}

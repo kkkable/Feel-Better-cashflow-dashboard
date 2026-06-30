@@ -1,0 +1,50 @@
+{
+  "name": "QuickCaptureDraft",
+  "type": "object",
+  "properties": {
+    "owner_email": { "type": "string", "format": "email", "description": "Website account email that owns this draft." },
+    "source": {
+      "type": "string",
+      "description": "Where the draft came from.",
+      "enum": ["telegram", "signal", "manual"],
+      "default": "telegram"
+    },
+    "raw_text": { "type": "string", "description": "Original user input." },
+    "record_type": {
+      "type": "string",
+      "description": "Parsed record type.",
+      "enum": ["income", "expense", "unknown"],
+      "default": "expense"
+    },
+    "name": { "type": "string", "description": "Parsed merchant, source, or label." },
+    "category": { "type": "string", "description": "Parsed category." },
+    "amount_hkd": { "type": "number", "description": "Parsed HKD amount." },
+    "date": { "type": "string", "format": "date", "description": "Parsed record date." },
+    "is_recurring": { "type": "boolean", "description": "Whether this draft repeats monthly.", "default": false },
+    "confidence": { "type": "number", "description": "Parser confidence from 0 to 1." },
+    "parser_source": {
+      "type": "string",
+      "description": "Parser used to create this draft.",
+      "enum": ["local", "huggingface"],
+      "default": "local"
+    },
+    "status": {
+      "type": "string",
+      "description": "Draft review status.",
+      "enum": ["pending", "confirmed", "ignored"],
+      "default": "pending"
+    },
+    "telegram_chat_id": { "type": "string", "description": "Telegram chat id that created this draft." },
+    "telegram_message_id": { "type": "string", "description": "Telegram message id that created this draft." },
+    "signal_sender": { "type": "string", "description": "Signal sender that created this draft." },
+    "signal_message_id": { "type": "string", "description": "Signal message id or timestamp that created this draft." },
+    "notes": { "type": "string", "description": "Optional notes." }
+  },
+  "required": ["owner_email", "source", "raw_text", "record_type", "name", "amount_hkd", "date", "status"],
+  "rls": {
+    "create": true,
+    "read": { "data.owner_email": "{{user.email}}" },
+    "update": { "data.owner_email": "{{user.email}}" },
+    "delete": { "data.owner_email": "{{user.email}}" }
+  }
+}
