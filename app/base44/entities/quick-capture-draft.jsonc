@@ -42,7 +42,7 @@
   },
   "required": ["owner_email", "source", "raw_text", "record_type", "name", "amount_hkd", "date", "status"],
   "rls": {
-    "create": true,
+    "create": { "data.owner_email": "{{user.email}}" },
     "read": { "data.owner_email": "{{user.email}}" },
     "update": { "data.owner_email": "{{user.email}}" },
     "delete": { "data.owner_email": "{{user.email}}" }

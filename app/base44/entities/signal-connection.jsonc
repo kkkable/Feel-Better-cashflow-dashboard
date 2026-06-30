@@ -22,7 +22,7 @@
   },
   "required": ["owner_email", "connection_token", "token_expires_at", "status"],
   "rls": {
-    "create": true,
+    "create": { "data.owner_email": "{{user.email}}" },
     "read": { "data.owner_email": "{{user.email}}" },
     "update": { "data.owner_email": "{{user.email}}" },
     "delete": { "data.owner_email": "{{user.email}}" }

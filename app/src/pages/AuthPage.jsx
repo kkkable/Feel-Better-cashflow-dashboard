@@ -9,6 +9,7 @@ import {
 } from "@/lib/authFlow";
 
 const REMEMBERED_ACCOUNT_KEY = "finance-dashboard-account";
+const OTP_RESEND_COOLDOWN_SECONDS = 30;
 
 function normalizeEmail(value) {
   return value.trim().toLowerCase();
@@ -39,6 +40,7 @@ export default function AuthPage({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGuestPromptOpen, setIsGuestPromptOpen] = useState(false);
   const [registeredThisSession, setRegisteredThisSession] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const guestPromptRef = useRef(null);
 
   const normalizedEmail = normalizeEmail(account);
@@ -67,6 +69,16 @@ export default function AuthPage({
       document.removeEventListener("touchstart", handlePointerDown);
     };
   }, [isGuestPromptOpen]);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return undefined;
+
+    const timeoutId = window.setTimeout(() => {
+      setResendCooldown((currentCooldown) => Math.max(0, currentCooldown - 1));
+    }, 1000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [resendCooldown]);
 
   async function login({ migrateGuestData = false } = {}) {
     const response = await base44.auth.loginViaEmailPassword(normalizedEmail, password);
@@ -113,6 +125,7 @@ export default function AuthPage({
       rememberIfNeeded();
       setRegisteredThisSession(true);
       setNeedsVerification(true);
+      setResendCooldown(OTP_RESEND_COOLDOWN_SECONDS);
       setMessage("Account created. Enter the verification code sent to your email.");
     } catch (continueError) {
       setError(getErrorMessage(continueError, "Unable to login or register."));
@@ -159,6 +172,7 @@ export default function AuthPage({
     setIsSubmitting(true);
     try {
       await base44.auth.resendOtp(normalizedEmail);
+      setResendCooldown(OTP_RESEND_COOLDOWN_SECONDS);
       setMessage("Verification code sent again. Check your email.");
     } catch (resendError) {
       setError(getErrorMessage(resendError, "Unable to resend verification code."));
@@ -195,6 +209,7 @@ export default function AuthPage({
                   setNeedsVerification(false);
                   setOtpCode("");
                   setRegisteredThisSession(false);
+                  setResendCooldown(0);
                 }}
                 placeholder="you@example.com"
                 required
@@ -235,12 +250,12 @@ export default function AuthPage({
             {needsVerification && (
               <Button
                 className="mx-auto flex min-h-8 w-auto px-3 py-1 text-[10px]"
-                disabled={isSubmitting}
+                disabled={isSubmitting || resendCooldown > 0}
                 onClick={handleResendOtp}
                 type="button"
                 variant="ghost"
               >
-                Resend code
+                {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend code"}
               </Button>
             )}
 

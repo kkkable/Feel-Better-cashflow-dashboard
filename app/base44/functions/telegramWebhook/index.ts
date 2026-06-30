@@ -499,7 +499,10 @@ async function getHuggingFaceDrafts(text: string, now: Date) {
 
 function requireWebhookSecret(req: Request) {
   const expectedSecret = Deno.env.get("TELEGRAM_WEBHOOK_SECRET");
-  if (!expectedSecret) return true;
+  if (!expectedSecret) {
+    console.log("telegramWebhook rejected: TELEGRAM_WEBHOOK_SECRET is not configured");
+    return false;
+  }
   return req.headers.get("X-Telegram-Bot-Api-Secret-Token") === expectedSecret;
 }
 
