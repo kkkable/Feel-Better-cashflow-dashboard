@@ -1,86 +1,99 @@
-# Feel-Better Cashflow Dashboard
+# 💸 Feel-Better Cashflow Dashboard
 
-A personal finance dashboard that makes cashflow tracking faster, simpler, and less stressful.
+A simple personal finance dashboard that makes cashflow tracking faster, clearer, and less stressful.
 
-Live app: [feelbetter-cashflow-dashboard.base44.app](https://feelbetter-cashflow-dashboard.base44.app/)
+[![Live App](https://img.shields.io/badge/Live%20App-Open%20Dashboard-brightgreen)](https://feelbetter-cashflow-dashboard.base44.app/)
+![Project Type](https://img.shields.io/badge/Project-Personal%20Finance%20Dashboard-blue)
+![Language Support](https://img.shields.io/badge/Language-English%20%7C%20繁體中文-orange)
+
+> **Feel-Better Cashflow Dashboard**, also called **F-finance**, is designed for people who want to understand their money without using a heavy accounting tool.
 
 ![Dashboard screenshot](docs/screenshots/guest_dashboard.png)
 
-## What It Is
+---
 
-Feel-Better Cashflow Dashboard, short form **F-finance**, is built for people who want to understand their money without using a heavy accounting tool.
+## 📖 Overview
 
-The app focuses on everyday cashflow:
+Many finance apps are powerful, but they often ask users to behave like accountants. **F-finance** takes a simpler approach: record money quickly, review the important numbers, and fix details later when needed.
 
-- How much came in this month?
-- How much went out this month?
-- What is left?
-- Which records are monthly, and which are one-time?
-- What does the next few months look like?
-- Can I record spending quickly without opening a complex form?
+The dashboard focuses on everyday cashflow questions:
 
-It is designed to feel simple first, but still useful when the user wants more detail.
+- 💰 How much money came in this month?
+- 💸 How much went out this month?
+- 📊 What is the net cashflow?
+- 🔁 Which records are monthly, and which are one-time?
+- 🔮 What could the next few months look like?
+- ⚡ Can spending be recorded quickly without opening a complex form?
 
-## Feature Highlights
+The goal is to make money review feel lighter, calmer, and easier to continue.
 
-| Feature | Why it is useful |
+---
+
+## ✨ Feature Highlights
+
+| Feature | Description | Why It Matters |
+|---|---|---|
+| 👤 Guest mode | Try the dashboard before creating an account | Low-friction demo experience |
+| 🧾 Simple / detailed record modes | Choose between quick input and more controlled entry | Supports both casual and careful tracking |
+| 🔁 Monthly & one-time records | Separate recurring records from one-off transactions | Cleaner cashflow planning |
+| 🔮 Cashflow projection | Forecast future months using recurring and one-time records | Helps users see upcoming money pressure |
+| 🕘 Recent records | Highlights recent non-monthly income and expenses | Avoids overwhelming the dashboard |
+| 📥 CSV import | Add many records from a CSV file | Faster migration and bulk testing |
+| 🌍 Multi-currency display | Choose a currency symbol and matching advice context | Better for users outside one default market |
+| 🈯 Traditional Chinese support | Switch between English and Traditional Chinese | More accessible for Hong Kong / Traditional Chinese users |
+| 🤖 Chat-style capture | Convert natural money messages into draft records | Faster than manual forms for quick spending notes |
+| 🌤️ Money weather | Uses simple visual feedback for cashflow condition | Makes finance review feel less intimidating |
+
+---
+
+## 🖥️ Dashboard
+
+The dashboard gives users a quick view of their current money position.
+
+### Key dashboard metrics
+
+| Metric | Meaning |
 |---|---|
-| Guest mode | Lets people try the dashboard before creating an account. Guest data is temporary. |
-| Simple and detailed modes | Simple mode keeps input light. Detailed mode gives more control over records. |
-| Monthly and one-time records | Recurring income/expenses stay separate from non-monthly records for cleaner planning. |
-| Cashflow projection | Shows future months using recurring records plus one-time records in the month they happen. |
-| Recent records | Dashboard focuses on the latest non-monthly income and expense records instead of overwhelming the user. |
-| CSV import | Adds many records at once from a single file. |
-| Multi-currency display | Users can choose a currency symbol and get advice in a matching currency context. |
-| Traditional Chinese support | The interface can switch between English and Traditional Chinese. |
+| This month income | Total income recorded for the current month |
+| This month expense | Total expense recorded for the current month |
+| Net cashflow | Income minus expense |
+| Savings rate | How much of the income remains after expenses |
+| Recurring monthly income | Income that repeats monthly |
+| Recurring monthly expense | Expenses that repeat monthly |
+| Forecast projection | Future cashflow based on recurring and dated one-time records |
+| Recent income / expense | Latest non-monthly records for quick review |
+| Category breakdown | Spending/income grouping when enough data exists |
 
-## Dashboard
-
-The dashboard gives a fast view of the user's current money position.
-
-It includes:
-
-- this month income
-- this month expense
-- net cashflow
-- savings rate
-- recurring monthly income
-- recurring monthly expense
-- forecast projection
-- recent income
-- recent expense
-- category breakdown when enough data exists
-
-The dashboard also uses a subtle "money weather" idea. Better cashflow can feel sunny, normal cashflow can feel cloudy, and weaker cashflow can feel rainy.
+The dashboard also includes a small **money weather** idea: stronger cashflow can feel sunny, normal cashflow can feel cloudy, and weaker cashflow can feel rainy.
 
 ![Dashboard screenshot](docs/screenshots/dashboard-guest.png)
 
-## Record Page
+---
 
-The Record page is where users add and fix data.
+## 📝 Record Page
 
-It supports:
+The Record page is where users add, review, edit, and delete money records.
 
-- quick income entry
-- quick expense entry
-- recurring monthly checkbox
-- CSV import
-- record management
-- edit and delete actions
-- monthly vs non-monthly record views
-- pagination for larger record lists
+| Function | Supported |
+|---|---:|
+| Quick income entry | ✅ |
+| Quick expense entry | ✅ |
+| Recurring monthly checkbox | ✅ |
+| CSV import | ✅ |
+| Edit records | ✅ |
+| Delete records | ✅ |
+| Monthly / non-monthly record views | ✅ |
+| Pagination for larger lists | ✅ |
 
-The goal is to keep basic input quick while still allowing corrections when mistakes happen.
+The goal is to keep basic input fast while still allowing users to correct mistakes later.
 
-Screenshot slot:
+---
 
-> Record page screenshot will be added here.
+## 🤖 Connect Bot Page
 
-## Connect Bot Page
+The Connect Bot page is built for fast money capture from chat-style messages.
 
-The Connect Bot page is for quick capture from chat.
-
-Users can write natural money messages such as:
+Users can type natural messages such as:
 
 ```text
 lunch 58
@@ -91,54 +104,61 @@ I get 450 rebate from credit card
 Mom gave me 300 as red packet and I bought coffee for 50
 ```
 
-The bot flow turns messages into draft records first, so the user can review and fix them before saving.
+Instead of saving immediately, the bot flow turns messages into **draft records** first. Users can review and fix the draft before saving it.
 
-Supported bot-style flows:
+### Supported bot-style flows
 
-- Telegram
-- Signal bridge
-- draft review before saving
-- recurring monthly detection
-- AI-assisted parsing for sentence-style messages
+| Flow | Purpose |
+|---|---|
+| Telegram-style capture | Record money through short chat messages |
+| Signal bridge-style capture | Support external chat capture workflow |
+| Draft review before saving | Prevent incorrect records from being saved too quickly |
+| Recurring monthly detection | Recognize monthly records from message context |
+| AI-assisted parsing | Extract income / expense meaning from sentence-style messages |
 
 ![Connect Bot screenshot](docs/screenshots/connect-bot-guest.png)
 
-## Feel Better Mode
+---
 
-Feel Better mode is a lightweight AI money check.
+## 😊 Feel Better Mode
 
-The user enters:
+**Feel Better Mode** is a lightweight AI money check. It gives the user short, kind, and practical feedback based on expected monthly income and expected monthly expense.
 
-- expected monthly income
-- expected monthly expense
+| Input | Output |
+|---|---|
+| Expected monthly income | A short cashflow comment |
+| Expected monthly expense | A simple money-health interpretation |
+| Selected currency context | Advice written with the matching currency feel |
 
-Then the app returns a short comment that is:
-
-- kind
-- direct
-- humorous
-- based on the selected currency context
-- intentionally short, not a long finance lecture
-
-It is meant to make money review feel less intimidating.
+The response is intentionally short, direct, and sometimes humorous. It is not meant to be a long finance lecture — it is meant to make money review feel easier to start.
 
 ![Feel Better mode screenshot](docs/screenshots/feel-better-guest.png)
 
-## Why It Is Different
+---
 
-Many finance apps are powerful but ask users to behave like accountants.
+## 🧭 User Workflow
 
-F-finance is built around a different workflow:
+```mermaid
+flowchart LR
+    A[Open dashboard] --> B[Record income or expense]
+    B --> C[Review cashflow numbers]
+    C --> D[Check forecast]
+    D --> E[Fix or update records]
+    E --> F[Use bot capture when manual input feels slow]
+```
+
+A typical user flow is:
 
 1. Open the app.
 2. Record money quickly.
 3. Review obvious cashflow numbers.
-4. Fix mistakes later.
-5. Use chat-style capture when manual input feels too slow.
+4. Check the forecast.
+5. Fix mistakes later.
+6. Use chat-style capture when manual input feels too slow.
 
-The interesting part is not only the dashboard. It is the combination of simple input, reviewable drafts, recurring planning, guest trial, and short AI feedback.
+---
 
-## Built With
+## 🛠️ Built With
 
 | Category | Technology |
 |---|---|
@@ -148,15 +168,9 @@ The interesting part is not only the dashboard. It is the combination of simple 
 | Database | Base44 entities |
 | AI | Hugging Face compatible inference |
 | Bot flows | Telegram and Signal-style capture |
+| Language support | English, Traditional Chinese |
 
-## Repository Notes
+---
 
-This public repository contains sanitized source code only.
 
-It does not include:
 
-- production API keys
-- bot tokens
-- server IP addresses
-- private deployment notes
-- private environment files
