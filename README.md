@@ -3,18 +3,19 @@
 A simple personal finance dashboard that makes cashflow tracking faster, clearer, and less stressful.
 
 [![Live App](https://img.shields.io/badge/Live%20App-Open%20Dashboard-brightgreen)](https://feelbetter-cashflow-dashboard.base44.app/)
-![Project Type](https://img.shields.io/badge/Project-Personal%20Finance%20Dashboard-blue)
-![Language Support](https://img.shields.io/badge/Language-English%20%7C%20繁體中文-orange)
 
-> **Feel-Better Cashflow Dashboard**, also called **F-finance**, is designed for people who want to understand their money without using a heavy accounting tool.
+> Link: https://feelbetter-cashflow-dashboard.base44.app/
+
+
 
 ![Dashboard screenshot](docs/screenshots/guest_dashboard.png)
 
+> **Feel-Better Cashflow Dashboard** is designed for people who want to understand their money without using a heavy accounting tool.
 ---
 
 ## 📖 Overview
 
-Many finance apps are powerful, but they often ask users to behave like accountants. **F-finance** takes a simpler approach: record money quickly, review the important numbers, and fix details later when needed.
+Many finance apps are powerful, but they often ask users to behave like accountants. **Feel-Better Cashflow Dashboard** takes a simpler approach: record money quickly, review the important numbers, and fix details later when needed.
 
 The dashboard focuses on everyday cashflow questions:
 
@@ -25,7 +26,19 @@ The dashboard focuses on everyday cashflow questions:
 - 🔮 What could the next few months look like?
 - ⚡ Can spending be recorded quickly without opening a complex form?
 
-The goal is to make money review feel lighter, calmer, and easier to continue.
+**The goal is to make money review feel lighter, calmer, and easier to continue.**
+
+---
+
+## 🚀 How to Use
+
+Open the live app and try the dashboard in guest mode. You can add income or expense records, choose whether a record is monthly or one-time, and review your cashflow summary on the dashboard.
+
+For faster input, you can also use the Connect Bot page to turn short money messages into draft records before saving them. 
+
+- 📲 **Record your expenses/income at any time.**
+
+A tutorial is available inside the [![Live App](https://img.shields.io/badge/Live%20App-Open%20Dashboard-brightgreen)](https://feelbetter-cashflow-dashboard.base44.app/) to guide new users through the main features.
 
 ---
 
@@ -39,10 +52,38 @@ The goal is to make money review feel lighter, calmer, and easier to continue.
 | 🔮 Cashflow projection | Forecast future months using recurring and one-time records | Helps users see upcoming money pressure |
 | 🕘 Recent records | Highlights recent non-monthly income and expenses | Avoids overwhelming the dashboard |
 | 📥 CSV import | Add many records from a CSV file | Faster migration and bulk testing |
-| 🌍 Multi-currency display | Choose a currency symbol and matching advice context | Better for users outside one default market |
+| 🌍 Currency support | Supports HKD, USD, JPY, EUR, GBP, CNY, TWD, SGD, AUD, and CAD | Makes the dashboard more useful for users in different regions |
 | 🈯 Traditional Chinese support | Switch between English and Traditional Chinese | More accessible for Hong Kong / Traditional Chinese users |
 | 🤖 Chat-style capture | Convert natural money messages into draft records | Faster than manual forms for quick spending notes |
 | 🌤️ Money weather | Uses simple visual feedback for cashflow condition | Makes finance review feel less intimidating |
+
+---
+
+## 🌍 Currency Support
+
+Users can choose their preferred currency from the currency dropdown, making the dashboard easier to read in their own money context.
+
+Supported currencies:
+
+| Currency Code | Currency |
+|---|---|
+| HKD | Hong Kong Dollar |
+| USD | US Dollar |
+| JPY | Japanese Yen |
+| EUR | Euro |
+| GBP | British Pound |
+| CNY | Chinese Yuan |
+| TWD | New Taiwan Dollar |
+| SGD | Singapore Dollar |
+| AUD | Australian Dollar |
+| CAD | Canadian Dollar |
+
+The selected currency is used across the dashboard display and the **Feel Better Mode** advice context.
+
+> Note: The currency selector changes the display currency/context. It does not imply live exchange-rate conversion unless that feature is added separately.
+
+<!-- Optional screenshot: save the image as docs/screenshots/currency-selector.png, then uncomment the line below. -->
+<!-- ![Currency selector](docs/screenshots/currency-selector.png) -->
 
 ---
 
@@ -130,7 +171,7 @@ Instead of saving immediately, the bot flow turns messages into **draft records*
 | Expected monthly expense | A simple money-health interpretation |
 | Selected currency context | Advice written with the matching currency feel |
 
-The response is intentionally short, direct, and sometimes humorous. It is not meant to be a long finance lecture — it is meant to make money review feel easier to start.
+The response is intentionally short, direct, and sometimes humorous. It is not meant to be a long finance lecture — it is meant to make money review easier to start.
 
 ![Feel Better mode screenshot](docs/screenshots/feel-better-guest.png)
 
@@ -169,8 +210,3 @@ A typical user flow is:
 | AI | Hugging Face compatible inference |
 | Bot flows | Telegram and Signal-style capture |
 | Language support | English, Traditional Chinese |
-
----
-
-
-
