@@ -34,7 +34,7 @@ The dashboard focuses on everyday cashflow questions:
 
 Open the live app and try the dashboard in guest mode. You can add income or expense records, choose whether a record is monthly or one-time, and review your cashflow summary on the dashboard.
 
-For faster input, you can also use the Connect Bot page to turn short money messages into draft records before saving them. 
+For **faster input**, you can also use the **Connect Bot** page to turn short messages into an income/expense records. 
 
 - 📲 **Record your expenses/income at any time.**
 
@@ -145,6 +145,8 @@ Mom gave me 300 as red packet and I bought coffee for 50
 
 > Instead of saving immediately, the bot flow turns messages into **draft records** first. Users can review and fix the draft before saving it.
 
+![Connect Bot screenshot](docs/screenshots/connect-bot-guest.png)
+
 ### Supported bot-style flows
 
 | Flow | Purpose |
@@ -154,8 +156,6 @@ Mom gave me 300 as red packet and I bought coffee for 50
 | Draft review before saving | Prevent incorrect records from being saved too quickly |
 | Recurring monthly detection | Recognize monthly records from message context |
 | AI-assisted parsing | Extract income / expense meaning from sentence-style messages |
-
-![Connect Bot screenshot](docs/screenshots/connect-bot-guest.png)
 
 ---
 
