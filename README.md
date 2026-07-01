@@ -105,8 +105,6 @@ The dashboard gives users a quick view of their current money position.
 | Recent income / expense | Latest non-monthly records for quick review |
 | Category breakdown | Spending/income grouping when enough data exists |
 
-The dashboard also includes a small **money weather** idea: stronger cashflow can feel sunny, normal cashflow can feel cloudy, and weaker cashflow can feel rainy.
-
 ![Dashboard screenshot](docs/screenshots/dashboard-guest.png)
 
 ---
@@ -126,7 +124,7 @@ The Record page is where users add, review, edit, and delete money records.
 | Monthly / non-monthly record views | ✅ |
 | Pagination for larger lists | ✅ |
 
-The goal is to keep basic input fast while still allowing users to correct mistakes later.
+> The goal is to keep basic input fast while still allowing users to correct mistakes later.
 
 ---
 
@@ -145,7 +143,7 @@ I get 450 rebate from credit card
 Mom gave me 300 as red packet and I bought coffee for 50
 ```
 
-Instead of saving immediately, the bot flow turns messages into **draft records** first. Users can review and fix the draft before saving it.
+> Instead of saving immediately, the bot flow turns messages into **draft records** first. Users can review and fix the draft before saving it.
 
 ### Supported bot-style flows
 
@@ -171,7 +169,7 @@ Instead of saving immediately, the bot flow turns messages into **draft records*
 | Expected monthly expense | A simple money-health interpretation |
 | Selected currency context | Advice written with the matching currency feel |
 
-The response is intentionally short, direct, and sometimes humorous. It is not meant to be a long finance lecture — it is meant to make money review easier to start.
+> The response is intentionally short, direct, and sometimes humorous. It is not meant to be a long finance lecture — it is meant to make money review easier to start.
 
 ![Feel Better mode screenshot](docs/screenshots/feel-better-guest.png)
 
