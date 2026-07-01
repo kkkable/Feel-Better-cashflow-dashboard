@@ -132,6 +132,8 @@ The Record page is where users add, review, edit, and delete money records.
 
 The Connect Bot page is built for fast money capture from chat-style messages.
 
+> E.g. Record expense right after finishing your meal, buying stuff
+
 Users can type natural messages such as:
 
 ```text
@@ -147,15 +149,11 @@ Mom gave me 300 as red packet and I bought coffee for 50
 
 ![Connect Bot screenshot](docs/screenshots/connect-bot-guest.png)
 
-### Supported bot-style flows
 
-| Flow | Purpose |
-|---|---|
-| Telegram-style capture | Record money through short chat messages |
-| Signal bridge-style capture | Support external chat capture workflow |
-| Draft review before saving | Prevent incorrect records from being saved too quickly |
-| Recurring monthly detection | Recognize monthly records from message context |
-| AI-assisted parsing | Extract income / expense meaning from sentence-style messages |
+| Platform | Supported |
+|---|---:|
+| Telegram | ✅ |
+| Signal | ✅ |
 
 ---
 
