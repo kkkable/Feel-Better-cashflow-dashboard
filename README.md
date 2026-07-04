@@ -34,7 +34,7 @@ The dashboard focuses on everyday cashflow questions:
 
 Open the live app and try the dashboard in guest mode. You can add income or expense records, choose whether a record is monthly or one-time, and review your cashflow summary on the dashboard.
 
-For **faster input**, you can also use the **Connect Bot** page to turn short messages into an income/expense records. 
+For **faster input**, you can also use the **Assistant Bot** page to turn short messages into an income/expense records. 
 
 - 📲 **Record your expenses/income at any time.**
 
@@ -128,9 +128,9 @@ The Record page is where users add, review, edit, and delete money records.
 
 ---
 
-## 🤖 Connect Bot Page
+## 🤖 Assistant Bot Page
 
-The Connect Bot page is built for fast money capture from chat-style messages.
+The Assistant Bot page is built for fast money capture from chat-style messages.
 
 > E.g. Record expense right after finishing your meal, buying stuff
 
