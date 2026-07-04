@@ -7,8 +7,9 @@ A simple personal finance dashboard that makes cashflow tracking faster, clearer
 > Link: https://feelbetter-cashflow-dashboard.base44.app/
 
 
-
-![Dashboard screenshot](docs/screenshots/guest_dashboard.png)
+<p align="center">
+  <img src="docs/screenshots/logo.png" alt="Dashboard screenshot" width="800" />
+</p>
 
 > **Feel-Better Cashflow Dashboard** is designed for people who want to understand their money without using a heavy accounting tool.
 ---
@@ -77,7 +78,7 @@ The dashboard gives users a quick view of their current money position.
 | Recent income / expense | Latest non-monthly records for quick review |
 | Category breakdown | Spending/income grouping when enough data exists |
 
-![Dashboard screenshot](docs/screenshots/dashboard.png)
+![Dashboard screenshot](docs/screenshots/dashboard2.png)
 
 ---
 
