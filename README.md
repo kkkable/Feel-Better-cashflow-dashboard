@@ -59,34 +59,6 @@ A tutorial is available inside the [![Live App](https://img.shields.io/badge/Liv
 
 ---
 
-## 🌍 Currency Support
-
-Users can choose their preferred currency from the currency dropdown, making the dashboard easier to read in their own money context.
-
-Supported currencies:
-
-| Currency Code | Currency |
-|---|---|
-| HKD | Hong Kong Dollar |
-| USD | US Dollar |
-| JPY | Japanese Yen |
-| EUR | Euro |
-| GBP | British Pound |
-| CNY | Chinese Yuan |
-| TWD | New Taiwan Dollar |
-| SGD | Singapore Dollar |
-| AUD | Australian Dollar |
-| CAD | Canadian Dollar |
-
-The selected currency is used across the dashboard display and the **Feel Better Mode** advice context.
-
-> Note: The currency selector changes the display currency/context. It does not imply live exchange-rate conversion unless that feature is added separately.
-
-<!-- Optional screenshot: save the image as docs/screenshots/currency-selector.png, then uncomment the line below. -->
-<!-- ![Currency selector](docs/screenshots/currency-selector.png) -->
-
----
-
 ## 🖥️ Dashboard
 
 The dashboard gives users a quick view of their current money position.
@@ -105,7 +77,7 @@ The dashboard gives users a quick view of their current money position.
 | Recent income / expense | Latest non-monthly records for quick review |
 | Category breakdown | Spending/income grouping when enough data exists |
 
-![Dashboard screenshot](docs/screenshots/dashboard-guest.png)
+![Dashboard screenshot](docs/screenshots/dashboard.png)
 
 ---
 
@@ -147,7 +119,7 @@ Mom gave me 300 as red packet and I bought coffee for 50
 
 > Instead of saving immediately, the bot flow turns messages into **draft records** first. Users can review and fix the draft before saving it.
 
-![Connect Bot screenshot](docs/screenshots/connect-bot-guest.png)
+![Assitant Bot screenshot](docs/screenshots/assistant_bot.png)
 
 
 | Platform | Supported |
@@ -170,6 +142,34 @@ Mom gave me 300 as red packet and I bought coffee for 50
 > The response is intentionally short, direct, and sometimes humorous. It is not meant to be a long finance lecture — it is meant to make money review easier to start.
 
 ![Feel Better mode screenshot](docs/screenshots/feel-better-guest.png)
+
+---
+
+## 🌍 Currency Support
+
+Users can choose their preferred currency from the currency dropdown, making the dashboard easier to read in their own money context.
+
+Supported currencies:
+
+| Currency Code | Currency |
+|---|---|
+| HKD | Hong Kong Dollar |
+| USD | US Dollar |
+| JPY | Japanese Yen |
+| EUR | Euro |
+| GBP | British Pound |
+| CNY | Chinese Yuan |
+| TWD | New Taiwan Dollar |
+| SGD | Singapore Dollar |
+| AUD | Australian Dollar |
+| CAD | Canadian Dollar |
+
+The selected currency is used across the dashboard display and the **Feel Better Mode** advice context.
+
+> Note: The currency selector changes the display currency/context. It does not imply live exchange-rate conversion unless that feature is added separately.
+
+<!-- Optional screenshot: save the image as docs/screenshots/currency-selector.png, then uncomment the line below. -->
+<!-- ![Currency selector](docs/screenshots/currency-selector.png) -->
 
 ---
 
