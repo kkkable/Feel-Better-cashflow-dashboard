@@ -87,7 +87,7 @@ The dashboard gives users a quick view of their current money position.
 The Record page is where users add, review, edit, and delete money records.
 
 | Function | Supported |
-|---|---:|
+|---|:---:|
 | Quick income entry | ✅ |
 | Quick expense entry | ✅ |
 | Recurring monthly checkbox | ✅ |
@@ -124,7 +124,7 @@ Mom gave me 300 as red packet and I bought coffee for 50
 
 
 | Platform | Supported |
-|---|---:|
+|---|:---:|
 | Telegram | ✅ |
 | Signal | ✅ |
 
