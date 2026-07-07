@@ -79,6 +79,14 @@
     @apply relative min-h-screen bg-white text-black;
   }
 
+  .finance-auth-page {
+    background-color: #fff;
+    background-image: url("/assets/login-background.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
   .finance-page::before {
     background-image: repeating-linear-gradient(
       0deg,

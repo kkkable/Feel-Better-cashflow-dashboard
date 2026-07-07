@@ -216,7 +216,7 @@ export default function AuthPage({
   }
 
   return (
-    <main className="finance-page">
+    <main className="finance-page finance-auth-page">
       <div className="finance-shell flex min-h-screen items-center py-8 sm:py-10">
         <div className="grid w-full gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)] lg:items-center">
           <section className="max-w-3xl">
