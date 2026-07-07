@@ -1,5 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { LockKeyhole, LogIn, UserRound } from "lucide-react";
+import {
+  BarChart3,
+  BotMessageSquare,
+  LockKeyhole,
+  LogIn,
+  Repeat2,
+  Sparkles,
+  UserRound,
+} from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +18,29 @@ import {
 
 const REMEMBERED_ACCOUNT_KEY = "finance-dashboard-account";
 const OTP_RESEND_COOLDOWN_SECONDS = 30;
+
+const publicFeatures = [
+  {
+    icon: BarChart3,
+    title: "Cashflow dashboard",
+    description: "See income, expense, and net cashflow in one clean view.",
+  },
+  {
+    icon: Repeat2,
+    title: "Recurring records",
+    description: "Keep monthly income and spending separate from one-time records.",
+  },
+  {
+    icon: BotMessageSquare,
+    title: "Telegram / Signal capture",
+    description: "Send simple money messages from your phone and review drafts later.",
+  },
+  {
+    icon: Sparkles,
+    title: "Feel Better mode",
+    description: "Get a short, kind money mood check when you want a quick review.",
+  },
+];
 
 function normalizeEmail(value) {
   return value.trim().toLowerCase();
@@ -185,9 +216,43 @@ export default function AuthPage({
   }
 
   return (
-    <main className="finance-page px-4 py-8 sm:px-6">
-      <div className="mx-auto flex min-h-[80vh] max-w-md items-center">
-        <section className="finance-panel w-full p-6">
+    <main className="finance-page">
+      <div className="finance-shell flex min-h-screen items-center py-8 sm:py-10">
+        <div className="grid w-full gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)] lg:items-center">
+          <section className="max-w-3xl">
+            <p className="finance-label">Personal finance</p>
+            <h1 className="mt-3 text-5xl font-semibold leading-none tracking-normal text-black sm:text-6xl lg:text-7xl">
+              Feel-Better Cashflow Dashboard
+            </h1>
+            <p className="finance-muted mt-5 max-w-2xl text-base sm:text-lg">
+              Track income, expenses, recurring records, and monthly cashflow in a
+              simple dashboard. Try it as a guest before creating an account.
+            </p>
+
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              {publicFeatures.map(({ icon: FeatureIcon, title, description }) => (
+                <div
+                  className="border border-black bg-white p-4"
+                  key={title}
+                >
+                  <div className="mb-3 flex items-center gap-3">
+                    <span className="flex h-9 w-9 items-center justify-center border border-black bg-white">
+                      <FeatureIcon className="h-4 w-4" strokeWidth={1.5} />
+                    </span>
+                    <h2 className="finance-card-title text-base">{title}</h2>
+                  </div>
+                  <p className="finance-muted text-sm">{description}</p>
+                </div>
+              ))}
+            </div>
+
+            <p className="finance-status mt-6 max-w-2xl">
+              Guest mode is temporary. Create an account when you want to keep your
+              records.
+            </p>
+          </section>
+
+          <section className="finance-panel w-full p-6">
           <div className="mb-6 flex items-center gap-3">
             <span className="border-2 border-black bg-black p-2 text-white">
               <LockKeyhole className="h-5 w-5" strokeWidth={1.5} />
@@ -327,6 +392,7 @@ export default function AuthPage({
             </div>
           )}
         </section>
+        </div>
       </div>
     </main>
   );
